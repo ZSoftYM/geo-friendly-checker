@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>GEO优化工具_AI搜索引擎优化_JSON-LD生成器 - 星图邻</title>
-  <meta name="description" content="星图邻（XingTuLink）提供 GEO 友好度检测、JSON-LD 生成器等面向 AI 搜索引擎优化的免费在线工具，助力网站在豆包、Kimi、文心一言、ChatGPT 中被主动引用。由西安栈上月明软件科技有限公司运营。" />
+  <meta name="description" content="开源 GEO（生成式引擎优化）工具集：GEO 友好度检测、AI 引用实测、JSON-LD 结构化数据生成，助力网站在豆包、Kimi、ChatGPT 等 AI 回答中被主动引用。免费使用，支持自托管。" />
   <meta name="keywords" content="GEO优化工具,AI搜索引擎优化,生成式引擎优化,JSON-LD生成器,Schema标记,在线工具,星图邻,XingTuLink,栈上月明" />
   <meta http-equiv="Cache-Control" content="no-transform" />
   <meta name="applicable-device" content="pc,mobile" />
@@ -36,7 +36,7 @@
         "name": "星图邻 XingTuLink",
         "url": "https://xingtulink.com",
         "logo": "https://xingtulink.com/img/logo.png",
-        "description": "面向生成式AI时代的免费在线工具平台",
+        "description": "面向生成式 AI 时代的开源技术品牌",
         "parentOrganization": {
           "@type": "Organization",
           "name": "西安栈上月明软件科技有限公司",
@@ -77,7 +77,6 @@
         <a href="/" class="active" data-i18n="nav.home">首页</a>
         <a href="/tools/geo-checker/" data-i18n="nav.geo-check">GEO 检测</a>
         <a href="/tools/json-ld-generator/" data-i18n="nav.jsonld">JSON-LD 生成器</a>
-        <a href="/about-geo/" data-i18n="nav.about-geo">关于 GEO</a>
         <a href="/contact/" data-i18n="nav.contact">联系我们</a>
         <a class="nav-cta" href="https://zsoftym.com/" data-external="1" data-i18n="nav.zsoftym">栈上月明官网 →</a>
       </nav>
@@ -87,29 +86,74 @@
   <main>
     <section class="hero">
       <div class="container">
-        <span class="eyebrow" data-i18n="home.eyebrow">西安栈上月明软件科技有限公司 出品</span>
-        <h1><span data-i18n="home.hero.h1.part1">让 AI 搜索引擎</span><span class="gradient-text" data-i18n="home.hero.h1.part2">主动推荐</span><span data-i18n="home.hero.h1.part3">你的品牌</span></h1>
+        <span class="eyebrow" data-i18n="home.eyebrow">开源 GEO 工具集</span>
+        <h1><span data-i18n="home.hero.h1.part1">让你的网站被 AI</span><span class="gradient-text" data-i18n="home.hero.h1.part2">主动引用</span></h1>
         <p class="lead" data-i18n="home.hero.lead">
-          星图邻（XingTuLink）提供面向生成式 AI 时代的免费在线工具：GEO 友好度检测、结构化数据生成、开源项目发布。
-          工具即用、数据不上传，助力你的网站在豆包、文心一言、Kimi、ChatGPT 回答中脱颖而出。
+          GEO（生成式引擎优化）让网页出现在豆包、Kimi、ChatGPT 等 AI 的回答中。本项目包含三个开源工具：GEO 检测、AI 引用实测、JSON-LD 生成，免费使用，可自行部署。
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary" href="/tools/geo-checker/" data-i18n="home.hero.cta-primary">开始 GEO 检测 →</a>
-          <a class="btn btn-ghost" href="/tools/json-ld-generator/" data-i18n="home.hero.cta-ghost">生成 JSON-LD</a>
+          <a class="btn btn-ghost" href="/tools/geo-checker/#citationSection" data-i18n="home.hero.cta-ghost">AI 引用实测</a>
         </div>
       </div>
     </section>
 
+    <!-- 什么是 GEO -->
     <section>
       <div class="container">
-        <div class="grid grid-2">
+        <div style="text-align:center;margin-bottom:36px;">
+          <span class="eyebrow" data-i18n="home.what.eyebrow">什么是 GEO</span>
+          <h2 data-i18n="home.what.h2">从 SEO 到 GEO，流量入口正在改变</h2>
+          <p class="lead" style="margin:8px auto 0;max-width:760px;" data-i18n="home.what.lead">
+            用户不再只搜关键词，而是直接向 AI 提问。能否出现在 AI 的回答里，决定了新的流量来源。
+          </p>
+        </div>
+        <div class="grid grid-3">
+          <div class="card">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 10h.01M12 10h.01M16 10h.01"></path></svg></span>
+            <h3 data-i18n="home.what.q1.title">用户直接问 AI</h3>
+            <p style="color:var(--text-soft);" data-i18n="home.what.q1.desc">越来越多的人在 AI 助手里直接提问，由 AI 组织好答案并给出参考来源，而不是返回一排链接。</p>
+          </div>
+          <div class="card">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
+            <h3 data-i18n="home.what.q2.title">AI 挑选可引用的来源</h3>
+            <p style="color:var(--text-soft);" data-i18n="home.what.q2.desc">结构清晰、信息权威、内容可被直接抽取的网页，更容易被 AI 选为回答的参考来源。</p>
+          </div>
+          <div class="card">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="m19 9-5 5-4-4-3 3"></path></svg></span>
+            <h3 data-i18n="home.what.q3.title">GEO 让页面成为答案</h3>
+            <p style="color:var(--text-soft);" data-i18n="home.what.q3.desc">用结构化数据、清晰语义和 FAQ 等内容提升页面的可引用性——这就是面向 AI 时代的 SEO。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 三个工具 -->
+    <section>
+      <div class="container">
+        <div style="text-align:center;margin-bottom:36px;">
+          <span class="eyebrow" data-i18n="home.tools.eyebrow">开源工具</span>
+          <h2 data-i18n="home.tools.h2">检测 → 优化 → 实测，三步闭环</h2>
+        </div>
+        <div class="grid grid-3">
           <a class="card" href="/tools/geo-checker/">
             <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg></span>
-            <h3 data-i18n="home.card.geo.title">GEO 友好度检测器</h3>
+            <h3 data-i18n="home.card.geo.title">GEO 友好度检测</h3>
             <p style="color:var(--text-soft);" data-i18n="home.card.geo.desc">
-              输入 URL 或粘贴 HTML 源码，4 个维度、100 分制自动评估，给出可落地的优化清单与优先级。
+              输入 URL 或粘贴 HTML，从结构化数据、Meta、内容语义、AI 可读性 4 个维度 100 分制打分，给出优化清单。
             </p>
-            <span class="chip" data-i18n="home.card.geo.chip">结构化数据 · Meta · 内容语义 · AI 可读性</span>
+            <span class="chip" data-i18n="home.card.geo.chip">4 维度 · 100 分制</span>
+            <div style="margin-top:20px;">
+              <span class="btn btn-ghost" style="pointer-events:none;" data-i18n="btn.use-now">立即使用 →</span>
+            </div>
+          </a>
+          <a class="card" href="/tools/geo-checker/#citationSection">
+            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.9-5.7A9 9 0 1 1 8.7 21.1z"></path><path d="M8 11h.01M12 11h.01M16 11h.01"></path></svg></span>
+            <h3 data-i18n="home.card.cite.title">AI 引用实测</h3>
+            <p style="color:var(--text-soft);" data-i18n="home.card.cite.desc">
+              输入网址和行业关键词，自动生成 6 个真实用户问题向 AI 提问，统计品牌名与域名的引用率，并分析未被引用的原因。
+            </p>
+            <span class="chip" data-i18n="home.card.cite.chip">6 个真实问题 · 引用率报告</span>
             <div style="margin-top:20px;">
               <span class="btn btn-ghost" style="pointer-events:none;" data-i18n="btn.use-now">立即使用 →</span>
             </div>
@@ -118,9 +162,9 @@
             <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg></span>
             <h3 data-i18n="home.card.jsonld.title">JSON-LD 生成器</h3>
             <p style="color:var(--text-soft);" data-i18n="home.card.jsonld.desc">
-              6 种 Schema 类型（Organization / Article / FAQ / HowTo / Product / LocalBusiness），表单填写即可生成可粘贴的代码。
+              支持 Organization / Article / FAQ / HowTo / Product / LocalBusiness 6 种 Schema，表单填写即可生成可粘贴的代码。
             </p>
-            <span class="chip" data-i18n="home.card.jsonld.chip">Schema.org 标准 · 实时预览 · 一键复制</span>
+            <span class="chip" data-i18n="home.card.jsonld.chip">Schema.org 标准 · 一键复制</span>
             <div style="margin-top:20px;">
               <span class="btn btn-ghost" style="pointer-events:none;" data-i18n="btn.use-now">立即使用 →</span>
             </div>
@@ -131,66 +175,11 @@
 
     <section>
       <div class="container">
-        <div style="text-align:center;margin-bottom:36px;">
-          <span class="eyebrow" data-i18n="home.why.eyebrow">为什么需要 GEO</span>
-          <h2 data-i18n="home.why.h2">传统 SEO 之后，下一代流量入口</h2>
-          <p class="lead" style="margin:8px auto 0;" data-i18n="home.why.lead">
-            当用户开始向 AI 提问而非搜索关键词，能否被 AI 引用，取决于你网站的结构化程度。
-          </p>
-        </div>
-        <div class="grid grid-3">
-          <div class="card">
-            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="2"></rect><path d="M12 8V4M9 3h6M9 13h.01M15 13h.01M9 17h.01M15 17h.01"></path></svg></span>
-            <h3 data-i18n="home.why.cited.title">被 AI 主动引用</h3>
-            <p style="color:var(--text-soft);" data-i18n="home.why.cited.desc">JSON-LD、FAQ、HowTo 等结构化数据让大模型能"读懂"你的页面，更容易被引用为答案。</p>
-          </div>
-          <div class="card">
-            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"></path><path d="M21 7v5h-5"></path></svg></span>
-            <h3 data-i18n="home.why.early.title">抢跑 AI 搜索</h3>
-            <p style="color:var(--text-soft);" data-i18n="home.why.early.desc">豆包、Kimi、文心一言、ChatGPT 已成新流量入口，GEO 优化比同行早一步占位。</p>
-          </div>
-          <div class="card">
-            <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 7.5-8 9-4.8-1.5-8-4.5-8-9V6l8-3z"></path></svg></span>
-            <h3 data-i18n="home.why.safe.title">本地优先 · 数据安全</h3>
-            <p style="color:var(--text-soft);" data-i18n="home.why.safe.desc">所有分析在你的浏览器内完成，URL 与 HTML 源码不会上传到任何服务器。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="grid grid-4">
-          <div class="card" style="text-align:center;">
-            <div class="stat-num gradient-text">100</div>
-            <p style="color:var(--text-soft);margin:0;" data-i18n="home.stat.100">评分维度全</p>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-num gradient-text">6</div>
-            <p style="color:var(--text-soft);margin:0;" data-i18n="home.stat.6">Schema 类型</p>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-num gradient-text">0</div>
-            <p style="color:var(--text-soft);margin:0;" data-i18n="home.stat.0">数据上传</p>
-          </div>
-          <div class="card" style="text-align:center;">
-            <div class="stat-num gradient-text">∞</div>
-            <p style="color:var(--text-soft);margin:0;" data-i18n="home.stat.inf">免费使用</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="cta-banner">
-          <span class="eyebrow" data-i18n="home.cta.eyebrow">需要专业服务？</span>
-          <h2><span data-i18n="home.cta.h2.part1">让栈上月明为你的品牌做一次</span><span class="gradient-text" data-i18n="home.cta.h2.part2">深度 GEO 优化</span></h2>
-          <p data-i18n="home.cta.desc">
-            星图邻的工具用于自检与日常优化；如果你的业务需要面向豆包、Kimi、文心一言、ChatGPT 的全链路 GEO 服务，
-            欢迎联系我们的母公司——西安栈上月明软件科技有限公司。
-          </p>
-          <a class="btn btn-primary" href="https://zsoftym.com/" data-external="1" data-i18n="btn.visit-zsoftym">访问栈上月明官网 →</a>
+        <div class="cta-banner" style="text-align:center;">
+          <span class="eyebrow" data-i18n="home.end.eyebrow">免费 · 可自托管</span>
+          <h2 data-i18n="home.end.h2">现在就看看你的网站能否被 AI 引用</h2>
+          <p data-i18n="home.end.desc">粘贴 HTML 即可在浏览器本地完成检测，不上传数据。</p>
+          <a class="btn btn-primary" href="/tools/geo-checker/" data-i18n="home.end.btn">开始 GEO 检测 →</a>
         </div>
       </div>
     </section>
@@ -203,10 +192,7 @@
           <a class="brand" href="/">
             <img src="/img/logo.png" alt="星图邻" data-i18n-attr="alt:brand.alt" />
           </a>
-          <p style="margin-top:14px;" data-i18n="footer.desc">
-            在线工具与开源项目发布平台。<br />
-            连接工具与创作者，点亮数字星图。
-          </p>
+          <p style="margin-top:14px;" data-i18n="footer.desc">循星图之迹，结开源之邻。</p>
           <div class="footer-social">
             <a href="https://github.com/ZSoftYM/geo-friendly-checker" target="_blank" rel="noopener noreferrer" title="开源仓库 · GitHub" aria-label="GitHub" data-i18n-attr="title:brand.github.title">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.63 22.42c.57.1.78-.25.78-.55 0-.27-.01-1-.02-1.96-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.27-5.24-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.35.78 1.04.78 2.11 0 1.52-.01 2.75-.01 3.13 0 .3.21.66.79.55A11.5 11.5 0 0 0 12 .5z"/></svg>
@@ -218,7 +204,6 @@
           <ul>
             <li><a href="/tools/geo-checker/" data-i18n="footer.tools.geo">GEO 友好度检测</a></li>
             <li><a href="/tools/json-ld-generator/" data-i18n="footer.tools.jsonld">JSON-LD 生成器</a></li>
-            <li><a href="/about-geo/" data-i18n="footer.tools.kb">GEO 知识库</a></li>
           </ul>
         </div>
         <div>

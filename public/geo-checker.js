@@ -1,13 +1,8 @@
-/* =========================================================
-   GEO 友好度检测器核心逻辑
-   - 支持「粘贴 HTML」与「输入 URL」两种模式
-   - URL 模式通过页面抓取代理服务抓取（PROXY_BASE 可配置）
-   - 支持中英文双语（通过 window.XTLi18n / xtl:langchange 事件）
-   ========================================================= */
+// GEO 检测器：粘贴 HTML 或走后端 /api/fetch 抓 URL，四维打分出报告
 (function () {
   const $ = (s, r) => (r || document).querySelector(s);
 
-  // ---------- 动态 UI 文案的中英文词典 ----------
+  // 界面文案的中英文词典
   const UI_STR = {
     "zh-CN": {
       dimStructured: "结构化数据",
@@ -136,14 +131,13 @@
       (UI_STR["zh-CN"][key] !== undefined ? UI_STR["zh-CN"][key] : key)
     );
   }
-  // 使用：T("key") 若值为函数原样返回；否则直接返回字符串。对参数型函数：T("fewJsonLd")(n)
+  // T("key") 拿到字符串；值是函数时原样返回，如 T("fewJsonLd")(n)
   let _cachedResult = null;
 
-  // 页面抓取代理服务地址（自建 CORS 代理，用于中转目标网页 HTML）
-  // 示例格式：'https://your-proxy-domain.com/proxy-path'
-  const PROXY_BASE = '请在此配置您的页面抓取代理服务地址';
+  // 走后端中转抓页面；后端若独立部署可改成完整地址
+  const FETCH_API = '/api/fetch';
 
-  // ---------- 模式切换 ----------
+  // 模式切换
   document.querySelectorAll(".tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       document.querySelectorAll(".tab").forEach((t) => t.classList.remove("active"));
@@ -155,13 +149,13 @@
     });
   });
 
-  // ---------- 解析 ----------
+  // HTML 解析
   function parse(html) {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc;
   }
 
-  // ---------- 检测函数 ----------
+  // 各项检测
   function checkStructuredData(doc) {
     const jsonLd = Array.from(doc.querySelectorAll('script[type="application/ld+json"]'));
     const types = new Set();
@@ -290,7 +284,7 @@
     };
   }
 
-  // ---------- 评分 ----------
+  // 评分
   function calcStructured(d) {
     let score = 0;
     const issues = [];
@@ -416,14 +410,14 @@
     return { score, max: 20, label: T("dimAI"), issues, sug };
   }
 
-  // ---------- 渲染 ----------
+  // 渲染结果
   function render(result) {
     _cachedResult = result;
     const re = $("#resultEmpty");
     if (re) re.style.display = "none";
     const rb = $("#resultBody");
     if (rb) rb.style.display = "";
-    // 显示结果时出现水印栏 + 下载图片按钮
+    // 有结果了才显示水印栏和下载按钮
     const sb = $("#geoShareBar");
     if (sb) sb.style.display = "flex";
     const ts = $("#totalScore");
@@ -543,7 +537,7 @@
     }[c]));
   }
 
-  // ---------- 主流程 ----------
+  // 主流程
   function runAnalysis(html) {
     const doc = parse(html);
     const sd = checkStructuredData(doc);
@@ -594,11 +588,11 @@
     status.textContent = T("fetching");
     $("#fetchBtn").disabled = true;
     try {
-      const proxy = PROXY_BASE + "/?url=" + encodeURIComponent(url);
-      const r = await fetch(proxy);
+      const apiUrl = FETCH_API + "?url=" + encodeURIComponent(url);
+      const r = await fetch(apiUrl);
       if (!r.ok) throw new Error("HTTP " + r.status);
       const html = await r.text();
-      if (!html) throw new Error("代理未返回内容");
+      if (!html) throw new Error("抓取接口未返回内容");
       status.textContent = T("fetchOk")(html.length);
       runAnalysis(html);
     } catch (e) {
@@ -611,7 +605,7 @@
   $("#shareImgBtn")?.addEventListener("click", () => {
     try {
       const tip = typeof T === "function" ? T : (k) => k;
-      // 1) 构造一张"卡片式"结果图（内置渲染，零外部依赖）
+      // 从结果页取数据拼一张分享卡片图
       const ts = document.querySelector("#totalScore")?.textContent?.trim() || "0";
       const tg = document.querySelector("#totalTag")?.textContent?.trim() || "";
       const dls = Array.from(document.querySelectorAll(".dim-row header")).map((h) => {
@@ -631,7 +625,7 @@
     }
   });
 
-  // 下载"分享卡片"：用原生 Canvas 绘制（零依赖）
+  // 分享卡片，原生 Canvas 画完直接下载
   function downloadShareCard({ score, tag, dims, top, wm }) {
     const W = 680;
     const PAD = 32;
@@ -776,18 +770,17 @@
     ctx.closePath();
   }
 
-  // ---------- 语言切换事件：若已有分析结果，按新语言重绘 ----------
+  // 换语言后如果有结果就重画一遍
   window.addEventListener("xtl:langchange", function () {
     if (_cachedResult) {
-      // 为维度标签重新翻译：重算会重跑分析 → 更简单：直接按当前语言重跑 calc 系列
+      // 重跑分析才能让报告里的标签和问题建议都换成新语言
       const htmlInput = $("#htmlInput");
       const htmlVal = (htmlInput && htmlInput.value) || "";
       if (htmlVal.trim()) {
         runAnalysis(htmlVal);
         return;
       }
-      // 或者简单重绘（标签/结论从字典重新取，问题/建议文本在 render 时从 T() 再取一次）
-      // 但问题/建议文本是渲染时直接注入的静态文字，不随变语言重绘。上面重跑分析更准确。
+      // URL 模式抓到的 HTML 没留在输入框里，这里没法重跑
     }
   });
 })();

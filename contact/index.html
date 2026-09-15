@@ -37,7 +37,6 @@
         <a href="/" data-i18n="nav.home">首页</a>
         <a href="/tools/geo-checker/" data-i18n="nav.geo-check">GEO 检测</a>
         <a href="/tools/json-ld-generator/" data-i18n="nav.jsonld">JSON-LD 生成器</a>
-        <a href="/about-geo/" data-i18n="nav.about-geo">关于 GEO</a>
         <a href="/contact/" class="active" data-i18n="nav.contact">联系我们</a>
         <a class="nav-cta" href="https://zsoftym.com/" data-external="1" data-i18n="nav.zsoftym">栈上月明官网 →</a>
       </nav>
@@ -52,6 +51,11 @@
         <p class="lead" data-i18n="contact.lead">
           星图邻的工具可以免费帮你自检；如果你的业务需要企业级 GEO 优化，欢迎联系母公司栈上月明。
         </p>
+        <div style="margin:24px auto 0;max-width:640px;border:1px solid var(--line);border-left:3px solid var(--brand-1);border-radius:8px;padding:14px 18px;background:var(--surface);text-align:left;">
+          <p style="margin:0;font-size:15px;line-height:1.75;">
+            <span style="color:var(--text-mute);" data-i18n="contact.pos.a">我们不做 GEO 营销铺量，</span><b style="color:var(--brand-1);" data-i18n="contact.pos.b">只做 GEO 底层优化</b><span style="color:var(--text-soft);" data-i18n="contact.pos.c">——从结构化数据、内容语义到技术合规，让网站本身被 AI 读懂、愿意引用。</span>
+          </p>
+        </div>
       </div>
     </section>
 
@@ -101,16 +105,19 @@
         <span class="eyebrow" data-i18n="contact.privacy.eyebrow">合规</span>
         <h2 data-i18n="contact.privacy.h2">隐私政策与免责声明</h2>
         <p style="color:var(--text-soft);">
-          <b data-i18n="contact.privacy.updated">最后更新：2026-08-21</b>
+          <b data-i18n="contact.privacy.updated">最后更新：2026-09-13</b>
         </p>
-        <h3 style="margin-top:18px;" data-i18n="contact.privacy.h.1">1. 我们收集什么</h3>
-        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.1">星图邻的工具默认<b>不上传</b>任何你输入的 URL 或 HTML 源码。所有解析在你的浏览器本地完成。</p>
-        <h3 data-i18n="contact.privacy.h.2">2. 第三方服务</h3>
-        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.2">检测器支持"粘贴 HTML 源码"与"输入 URL 抓取"两种方式。粘贴模式的所有解析都在你的浏览器本地完成；URL 抓取模式会经由部署方自行配置的<b>页面抓取代理服务</b>中转抓取目标网页 HTML，仅用于分析、不存储不传播内容。</p>
-        <h3 data-i18n="contact.privacy.h.3">3. 免责声明</h3>
-        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.3">本工具仅用于分析公开网页的技术结构，不存储、不传播任何页面内容。检测结果仅供参考，不构成 SEO/GEO 服务承诺。</p>
-        <h3 data-i18n="contact.privacy.h.4">4. 联系方式</h3>
-        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.4">如对隐私政策有疑问，请发送邮件至 <a href="mailto:guohao@zsymtech.cn" style="color:var(--brand-3);">guohao@zsymtech.cn</a>。</p>
+        <h3 style="margin-top:18px;" data-i18n="contact.privacy.h.1">1. 数据如何处理（本地与服务端）</h3>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.1">「粘贴 HTML 源码」模式的全部解析都在你的浏览器<b>本地</b>完成，不经过任何服务器。「URL 抓取」与「AI 引用实测」功能则需要后端服务支持：你提交的网址与关键词会被发送到当前所访问站点的<b>部署方</b>服务器，由其代为抓取目标网页并调用大模型完成检测。</p>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.1b">在官方站点 <b>xingtulink.com</b>，后端由西安栈上月明软件科技有限公司部署运行：提交的检测内容<b>不做持久化存储</b>，服务器仅在内存中临时记录各 IP 的访问时刻用于限频；无需注册、不追踪用户身份，语言偏好只保存在你本地浏览器中。</p>
+        <h3 data-i18n="contact.privacy.h.2">2. 第三方 AI 服务</h3>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.2">AI 引用实测由部署方自行配置 API Key 并调用第三方大模型服务（官方站点使用 DeepSeek）。你输入的网址与关键词会被发送至该模型服务商，其数据处理遵循其自身的隐私政策。AI 回答具有随机性，引用率结果仅供参考。</p>
+        <h3 data-i18n="contact.privacy.h.3">3. 开源软件与第三方部署</h3>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.3">本软件以开源协议免费公开（详见仓库 LICENSE），任何人都可自行下载、启动并配置自己的后端实例。通过非官方部署地址（非 xingtulink.com）使用本工具时，该实例的数据处理、日志留存与 API 调用均由<b>实际部署者自行负责，与西安栈上月明软件科技有限公司及星图邻无关</b>，请自行判断并承担使用风险。</p>
+        <h3 data-i18n="contact.privacy.h.4">4. 免责声明</h3>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.4">本工具仅分析公开网页的技术结构，检测与实测结果仅供参考，不构成任何 SEO/GEO 效果承诺或服务保证；我们不对第三方部署实例及第三方 AI 服务的可用性、准确性承担责任。</p>
+        <h3 data-i18n="contact.privacy.h.5">5. 联系方式</h3>
+        <p style="color:var(--text-soft);" data-i18n="contact.privacy.p.5">如对本政策有疑问，或就官方站点的数据处理事宜联系我们，请发送邮件至 <a href="mailto:guohao@zsymtech.cn" style="color:var(--brand-3);">guohao@zsymtech.cn</a>。</p>
       </div>
     </section>
   </main>
@@ -122,7 +129,7 @@
           <a class="brand" href="/">
             <img src="/img/logo.png" alt="星图邻" data-i18n-attr="alt:brand.alt" />
           </a>
-          <p style="margin-top:14px;" data-i18n="footer.desc.short">在线工具与开源项目发布平台。</p>
+          <p style="margin-top:14px;" data-i18n="footer.desc.short">循星图之迹，结开源之邻。</p>
           <div class="footer-social">
             <a href="https://github.com/ZSoftYM/geo-friendly-checker" target="_blank" rel="noopener noreferrer" title="开源仓库 · GitHub" aria-label="GitHub" data-i18n-attr="title:brand.github.title">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.63 22.42c.57.1.78-.25.78-.55 0-.27-.01-1-.02-1.96-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.75 2.68 1.25 3.34.96.1-.74.4-1.25.72-1.54-2.55-.29-5.24-1.27-5.24-5.65 0-1.25.45-2.27 1.18-3.07-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.58.23 2.75.11 3.04.73.8 1.18 1.82 1.18 3.07 0 4.39-2.69 5.36-5.25 5.64.41.35.78 1.04.78 2.11 0 1.52-.01 2.75-.01 3.13 0 .3.21.66.79.55A11.5 11.5 0 0 0 12 .5z"/></svg>
@@ -134,7 +141,6 @@
           <ul>
             <li><a href="/tools/geo-checker/" data-i18n="footer.tools.geo">GEO 友好度检测</a></li>
             <li><a href="/tools/json-ld-generator/" data-i18n="footer.tools.jsonld">JSON-LD 生成器</a></li>
-            <li><a href="/about-geo/" data-i18n="footer.tools.kb">GEO 知识库</a></li>
           </ul>
         </div>
         <div>

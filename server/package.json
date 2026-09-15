@@ -1,0 +1,14 @@
+{
+  "name": "xingtulink-geo-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "星图邻 GEO 工具站 Node 后端：静态托管 + 页面抓取接口 + AI 引用实测（零第三方依赖）",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "MIT"
+}

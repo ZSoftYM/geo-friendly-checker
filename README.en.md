@@ -1,143 +1,139 @@
-# XingTuLink · GEO Toolkit
+# GeoFriendlyChecker
 
-> **中文版** → [README.md](./README.md)
->
-> Brought to you by **Xi'an Zhanshang Yueming Software Technology Co., Ltd.**
-> Live Demo: [xingtulink.com](https://xingtulink.com) ·
-> Official Website: [zsoftym.com](https://zsoftym.com/)
+One of the open-source projects by XingTuLink.
 
-This project is a **zero-build, pure-static GEO toolkit** developed and open-sourced by **Xi'an Zhanshang Yueming Software Technology Co., Ltd.** Deploy it by dropping the files onto any static host — no bundler required. It ships with two core tools:
+GeoFriendlyChecker is a lightweight, self-hostable GEO (Generative Engine Optimization) diagnostic tool. Give it a URL and it scores your page across four dimensions — structured data, meta tags, content semantics, and AI readability — with actionable optimization advice. It also ships an AI Citation Test that simulates real users asking an AI model whether your brand or domain shows up in its answers, plus a ready-to-use JSON-LD generator.
 
-- **GEO Friendliness Checker** `/tools/geo-checker/` — 4 dimensions, 100-point scale for Generative Engine Optimization
-- **JSON-LD Generator** `/tools/json-ld-generator/` — 6 Schema types, one-click structured data generation
+The paste-HTML check runs entirely in the browser with zero data upload; URL fetching and the citation test are handled by the bundled Node service.
 
-## ✨ Live Demo
+## Features
 
-Official deployment: **[https://xingtulink.com](https://xingtulink.com)**
+### GEO Friendliness Check
 
-## 🖼 Screenshots
+- Enter a URL (fetched by the backend) or paste HTML source (parsed locally in the browser, nothing uploaded)
+- Four-dimension score (out of 100): Structured Data · Meta Tags · Content Semantics · AI Readability
+- Issue-by-issue diagnosis plus optimization suggestions, with a Canvas share-card export
 
-### Landing Page
+### AI Citation Test
 
-[![Homepage screenshot](./img/homepage-screenshot.png)](./img/homepage-screenshot.png)
-
-### GEO Friendliness Checker
-
-[![GEO Checker screenshot](./img/geo-checker-screenshot.png)](./img/geo-checker-screenshot.png)
+- Enter a target URL plus industry keywords
+- The server auto-generates 6 neutral questions that never reveal the brand name, then asks DeepSeek one by one
+- Hit detection is done locally with regular expressions (brand name / domain matching), not by asking the model to grade itself
+- Progress streams over SSE and a run takes about 20–40 seconds; a failed question is skipped automatically, and one extra pass analyzes why uncited questions were missed
 
 ### JSON-LD Generator
 
-[![JSON-LD Generator screenshot](./img/json-ld-generator-screenshot.png)](./img/json-ld-generator-screenshot.png)
+- Supports Organization / Article / FAQ / HowTo / Product / LocalBusiness
+- Fill in a form and get Schema.org-compliant code in real time, with one-click copy or download
 
-## 📁 Project Structure
+The whole site is bilingual (Chinese / English).
+
+## Screenshots
+
+<!-- Screenshot placeholders: drop the images into img/ and replace the files, or edit the paths below -->
+
+Home
+
+![Homepage screenshot](./img/homepage-screenshot.png)
+
+GEO Friendliness Checker (with AI Citation Test)
+
+![GEO checker screenshot](./img/geo-checker-screenshot.png)
+
+JSON-LD Generator
+
+![JSON-LD generator screenshot](./img/json-ld-generator-screenshot.png)
+
+AI Citation Test
+
+![AI citation benchmarking](./img/ai-citation-benchmarking.png)
+
+## Code Layout
 
 ```
-/
-├── index.html                       Landing page
-├── 404.html
-├── robots.txt
-├── sitemap.xml
-├── about-geo/index.html             About GEO (with FAQ)
-├── contact/index.html               Contact + Privacy Policy
+.
+├── index.html                         Home page
+├── 404.html / robots.txt / sitemap.xml
+├── contact/index.html                 Contact info and privacy policy
 ├── tools/
-│   ├── geo-checker/index.html       GEO Checker
-│   └── json-ld-generator/index.html JSON-LD Generator
-├── public/
-│   ├── styles.css                   Global styles
-│   ├── site.js                      Shared scripts
-│   ├── geo-checker.js               Checker logic
-│   └── json-ld-generator.js         Generator logic
-└── img/
-    ├── logo.png                     Brand logo
-    ├── homepage-screenshot.png      Landing page screenshot
-    ├── geo-checker-screenshot.png   GEO Checker screenshot
-    └── json-ld-generator-screenshot.png JSON-LD Generator screenshot
+│   ├── geo-checker/index.html         GEO checker page (includes the AI Citation Test)
+│   └── json-ld-generator/index.html   JSON-LD generator page
+├── public/                            Frontend: vanilla JS, no dependencies, no build step
+│   ├── styles.css                     Site-wide styles
+│   ├── i18n.js                        Chinese/English language switching
+│   ├── site.js                        Nav, mobile menu, site-wide JSON-LD injection
+│   ├── geo-checker.js                 Four-dimension checks, scoring, report rendering, share card
+│   ├── citation-test.js               Citation test frontend (SSE handling and rendering)
+│   └── json-ld-generator.js           Generator forms and code assembly
+├── img/                               Logo and screenshots
+└── server/                            Backend: Node built-in modules only, Node >= 18
+    ├── server.js                      HTTP entry: static hosting + API routes + SSE
+    ├── package.json                   npm start entry, no third-party dependencies
+    ├── .env.example                   Environment variable template
+    └── src/
+        ├── env.js                     .env loading and config
+        ├── store.js                   In-memory per-IP sliding-window rate limiting
+        ├── static.js                  Static file serving (with path-traversal protection)
+        ├── fetchPage.js               Page fetching (UA, redirects, timeout/size limits, SSRF guard)
+        ├── extract.js                 Heuristic brand-name candidate extraction from page HTML
+        ├── deepseek.js                DeepSeek Chat Completions client
+        └── citation.js                Citation test pipeline: questions, prompting, hit detection, analysis
 ```
 
-## 🚀 Local Preview
+A single backend process serves both the static pages and three endpoints: `GET /api/health` (health check), `GET /api/fetch` (page fetch), and `POST /api/geo/citation-test` (citation test, progress streamed over SSE).
 
-Serve the directory with any static file server, e.g.:
+## Quick Start
+
+### Local front-end checks (zero configuration)
+
+The paste-HTML check needs no backend, but the pages reference assets with absolute paths, so serve them with any static server (double-clicking `index.html` loses the styles):
 
 ```bash
-# Python
 python -m http.server 8080
-
-# Node
+# or
 npx serve .
 ```
 
-Then open `http://localhost:8080/` in your browser.
+Then open `http://localhost:8080/tools/geo-checker/` and switch to the "Paste HTML Source" tab.
 
-## 📦 Deployment
+### Full service (URL fetching + AI Citation Test)
 
-Upload the entire directory to any static host: Vercel, Alibaba Cloud OSS, Tencent Cloud COS, Cloudflare Pages, GitHub Pages, etc.
-
-### Example — Alibaba Cloud OSS
+No dependencies to install; requires Node.js 18+:
 
 ```bash
-ossutil cp -r . oss://your-bucket-name/ --update
+cd server
+cp .env.example .env        # Windows: use copy
+# edit .env and fill in DEEPSEEK_API_KEY
+node server.js              # or npm start; port 8080 by default
 ```
 
-> Before deploying, replace the domain references inside `robots.txt`, `sitemap.xml`, and each page's `canonical` / `og:url` tags with your actual domain.
+The server runs fine without `DEEPSEEK_API_KEY`; only the AI Citation Test is unavailable.
 
-## ⚙️ Page Fetch Proxy Configuration
+## Environment Variables
 
-The GEO Checker supports two modes:
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `PORT` | No | `8080` | Port the server listens on |
+| `DEEPSEEK_API_KEY` | Required for the citation test | None | DeepSeek API key, read only on the server, never sent to the browser |
+| `DEEPSEEK_MODEL` | No | `deepseek-chat` | Model to call |
+| `DEEPSEEK_BASE_URL` | No | `https://api.deepseek.com` | API base URL; point it at a self-hosted relay if needed |
+| `CITATION_RATE_MAX` | No | `2` | Max citation tests per IP per window; set to `false` (or `0` / `off`) to disable |
+| `FETCH_RATE_MAX` | No | `20` | Max page fetches per IP per window; set to `false` (or `0` / `off`) to disable |
+| `RATE_WINDOW_MS` | No | `60000` | Rate-limit window in milliseconds (1 minute by default) |
 
-1. **Paste HTML source** *(recommended)* — fully local parsing, zero external requests, nothing uploaded.
-2. **Fetch by URL** — requires a self-hosted CORS proxy to relay the target page's HTML.
+## Tech Stack
 
-To enable URL-fetch mode, edit `public/geo-checker.js` and set `PROXY_BASE` to your own **Page Fetch Proxy URL**:
+- Frontend: plain HTML / CSS / vanilla JS — no build step, no third-party dependencies
+- Backend: Node.js native HTTP (`node:http` / `node:fs`, etc.) — zero third-party npm dependencies
+- AI: DeepSeek API (OpenAI-compatible protocol, optional)
+- Internationalization: Chinese / English
 
-```js
-// public/geo-checker.js
-const PROXY_BASE = 'https://your-proxy-domain.com/proxy-path';
-```
+## License
 
-Your proxy endpoint should: accept a `?url=<target-url>` query parameter, respond with CORS headers, and return the raw HTML of the target page.
-
-## 🛠 Third-Party Dependencies
-
-- Fonts: system font stack, no external font requests.
-- Icons: Emoji characters, no icon font required.
-- "Paste HTML" mode runs entirely inside the user's browser with no third-party network requests.
-
-## ✅ Compliance Notes
-
-- All HTML / JS analysis runs locally in the browser — **user data is never uploaded**.
-- The Checker page already embeds a disclaimer.
-- A full privacy policy is available at `contact/#privacy`.
-
-## 🏢 About Us
-
-**XingTuLink** is the online-tools & open-source platform of Xi'an Zhanshang Yueming Software Technology Co., Ltd.
-
-- **Company**: Xi'an Zhanshang Yueming Software Technology Co., Ltd.
-- **Website**: [https://zsoftym.com/](https://zsoftym.com/)
-- **Live Tools**: [https://xingtulink.com](https://xingtulink.com)
-- **Email**: guohao@zsymtech.cn
-- **Phone**: +86 176 2902 0227
-- **Location**: Xi'an, Shaanxi, China
+MIT
 
 ---
 
-## ⚠️ Disclaimer
+**About**
 
-1. **Nature of the Tools.** The GEO Friendliness Checker, JSON-LD Generator, and any other utilities bundled with this project (collectively, the "Tools") are **free, open-source technical reference utilities**. They are provided solely for the purpose of analyzing a web page's technical structure and generating structured-data examples, and **do not constitute any GEO / SEO service guarantee or professional advice**.
-
-2. **Reference-only Results.** GEO scores and optimization suggestions are derived from general AI-search-engine friendliness rules. We **do not guarantee** that Doubao, Kimi, ChatGPT, or any other AI engine will cite or recommend websites optimized with the Tools. Each AI platform adjusts its algorithms frequently; actual results are determined solely by the respective platform.
-
-3. **Data & Privacy.**
-   - In "Paste HTML source" mode, all parsing runs **locally in the user's browser**. No input is ever uploaded.
-   - In "Fetch by URL" mode, public HTML is relayed through the **Page Fetch Proxy** configured by the deployer. Xi'an Zhanshang Yueming Software Technology Co., Ltd. (the "Company") does not store or redistribute any fetched content.
-   - Users must not use the Tools to fetch non-public or privacy-sensitive content. **Legal liability arising from such actions rests solely with the user.**
-
-4. **Use-at-your-own-risk.** The Company shall not be liable for any **direct or indirect damages** arising from downloading, deploying, modifying, or using the project source code, including — but not limited to — ranking drops, traffic loss, business interruption, or legal disputes.
-
-5. **Third-Party Content.** Third-party services referenced in the code or docs (static hosts, CORS proxies, Schema.org specs, etc.) are technical examples only. The Company makes no warranty as to their availability, accuracy, or security.
-
-6. **Right to Modify.** The Company reserves the right to **update or discontinue** maintenance of this project, its live services, and related documentation without prior notice. Open-source code is distributed under the terms of its applicable open-source license (if any).
-
-7. **Compliance.** Anyone deploying or using this project is responsible for complying with the laws and regulations of their jurisdiction, including (but not limited to) PRC Cybersecurity Law, Data Security Law, Personal Information Protection Law, and the Administrative Measures for AI-Generated Synthetic Content.
-
-**By using this project, you acknowledge that you have read, understood, and agreed to the full terms of this Disclaimer.**
+XingTuLink ([xingtulink.com](https://xingtulink.com)) is an open-source technology brand under ZSoftYM ([zsoftym.com](https://zsoftym.com)). We keep releasing open-source tools in the AI space to help companies solve real problems — GeoFriendlyChecker is our first one.

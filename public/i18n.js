@@ -1,35 +1,27 @@
-/* =========================================================
-   星图邻 XingTuLink - 中英双语 i18n
-   纯静态、零构建；默认 zh-CN，英文按字典替换。
-   使用方法：
-     - 在所有可翻译元素上加 data-i18n="key"（innerHTML 替换）
-     - 属性翻译：data-i18n-attr="placeholder:key|title:key2"
-     - meta 标签特殊处理：title / description / og:*
-     - 语言选择保存在 localStorage，跨页面持久化
-   ========================================================= */
+// 中英双语切换。默认中文即 HTML 原文；元素加 data-i18n="key" 即可按字典替换，
+// 属性用 data-i18n-attr="placeholder:key|title:key2"，title/description/og:* 单独处理。
+// 语言选择存 localStorage。
 (function () {
   "use strict";
 
-  // -------------- 翻译字典 --------------
+  // 翻译字典
   const DICT = {
-    "zh-CN": {}, // 中文 = HTML 原文（空字典即可，不替换）
+    "zh-CN": {}, // 中文用 HTML 原文，空字典不替换
     en: {
       "brand.github.title": "Open Source · GitHub",
-      /* ===== 通用：导航 / 页脚 ===== */
+      // 导航 / 页脚
       "nav.home": "Home",
       "nav.geo-check": "GEO Checker",
       "nav.jsonld": "JSON-LD Generator",
-      "nav.about-geo": "About GEO",
       "nav.contact": "Contact",
       "nav.zsoftym": "ZSoftYM Site →",
       "nav.menu": "Menu",
 
-      "footer.desc": "Online tools & open-source projects. Connecting creators, lighting up the digital star map.",
-      "footer.desc.short": "Online tools & open-source projects.",
+      "footer.desc": "Follow the StarMap, Join the Open Neighborhood.",
+      "footer.desc.short": "Follow the StarMap, Join the Open Neighborhood.",
       "footer.title.tools": "Tools",
       "footer.tools.geo": "GEO Friendliness Checker",
       "footer.tools.jsonld": "JSON-LD Generator",
-      "footer.tools.kb": "GEO Knowledge Base",
       "footer.title.company": "Company",
       "footer.company.zsoftym": "ZSoftYM Official",
       "footer.company.contact": "Contact Us",
@@ -42,59 +34,57 @@
 
       "brand.alt": "XingTuLink",
 
-      /* ===== 通用：CTA / 按钮 ===== */
+      // CTA / 按钮
       "btn.use-now": "Use Now →",
       "btn.visit-zsoftym": "Visit ZSoftYM →",
       "btn.contact-zsoftym": "Contact ZSoftYM →",
       "btn.return-home": "Back to Home",
       "btn.go-geo": "Go to GEO Checker",
 
-      /* ===== 首页 ===== */
-      "home.eyebrow": "By Xi'an Zhanshang Yueming Software Technology Co., Ltd.",
-      "home.hero.h1.part1": "Make AI Search Engines",
-      "home.hero.h1.part2": "actively recommend",
-      "home.hero.h1.part3": "your brand",
-      "home.hero.lead": "XingTuLink provides free online tools for the Generative AI era: GEO friendliness checker, structured data generator, and open-source project publishing. All tools run locally in your browser — no data uploads — so your site stands out in answers from Doubao, Wenxin Yiyan, Kimi and ChatGPT.",
+      // 首页
+      "home.eyebrow": "Open-Source GEO Toolkit",
+      "home.hero.h1.part1": "Make AI",
+      "home.hero.h1.part2": "cite your website",
+      "home.hero.lead": "GEO (Generative Engine Optimization) helps web pages appear in answers from AI assistants like Doubao, Kimi and ChatGPT. Three open-source tools — GEO Check, AI Citation Test and JSON-LD Generator — free to use and self-hostable.",
       "home.hero.cta-primary": "Start GEO Check →",
-      "home.hero.cta-ghost": "Generate JSON-LD",
+      "home.hero.cta-ghost": "AI Citation Test",
 
-      "home.card.geo.title": "GEO Friendliness Checker",
-      "home.card.geo.desc": "Enter a URL or paste HTML source for an automatic 4-dimension, 100-point evaluation with an actionable, prioritized optimization checklist.",
-      "home.card.geo.chip": "Structured Data · Meta · Content Semantics · AI Readability",
+      "home.what.eyebrow": "What is GEO",
+      "home.what.h2": "From SEO to GEO: the traffic gateway is changing",
+      "home.what.lead": "Users no longer only type keywords — they ask AI directly. Whether you appear in AI answers determines your new traffic source.",
+      "home.what.q1.title": "Users ask AI directly",
+      "home.what.q1.desc": "More people ask questions in AI assistants; AI composes the answer and lists sources, instead of returning a page of links.",
+      "home.what.q2.title": "AI picks citable sources",
+      "home.what.q2.desc": "Pages that are well structured, authoritative and easy to extract are more likely to be chosen as reference sources in AI answers.",
+      "home.what.q3.title": "GEO turns pages into answers",
+      "home.what.q3.desc": "Structured data, clear semantics and FAQ-style content improve a page's citability — this is SEO for the AI era.",
+
+      "home.tools.eyebrow": "Open-Source Tools",
+      "home.tools.h2": "Check → Optimize → Verify, a closed loop",
+      "home.card.geo.title": "GEO Friendliness Check",
+      "home.card.geo.desc": "Enter a URL or paste HTML to get a 4-dimension, 100-point score — Structured Data, Meta, Content Semantics and AI Readability — with an optimization checklist.",
+      "home.card.geo.chip": "4 dimensions · 100-point scale",
+      "home.card.cite.title": "AI Citation Test",
+      "home.card.cite.desc": "Enter a URL and industry keywords; the system generates 6 real-user questions for an AI, then reports your brand/domain citation rate and why questions went uncited.",
+      "home.card.cite.chip": "6 real questions · citation report",
       "home.card.jsonld.title": "JSON-LD Generator",
-      "home.card.jsonld.desc": "6 Schema types (Organization / Article / FAQ / HowTo / Product / LocalBusiness). Fill in the form and get copy-paste ready code.",
-      "home.card.jsonld.chip": "Schema.org Standard · Live Preview · One-Click Copy",
+      "home.card.jsonld.desc": "6 Schema types: Organization / Article / FAQ / HowTo / Product / LocalBusiness. Fill in the form and get copy-paste ready code.",
+      "home.card.jsonld.chip": "Schema.org standard · one-click copy",
 
-      "home.why.eyebrow": "Why GEO Matters",
-      "home.why.h2": "After traditional SEO, the next generation of traffic",
-      "home.why.lead": "When users start asking AI questions instead of typing keywords, being cited by AI depends on how well structured your website is.",
-      "home.why.cited.title": "Cited Actively by AI",
-      "home.why.cited.desc": "JSON-LD, FAQ and HowTo structured data let LLMs \"read\" your page and increases the chance it is cited in answers.",
-      "home.why.early.title": "Stay Ahead of AI Search",
-      "home.why.early.desc": "Doubao, Kimi, Wenxin Yiyan and ChatGPT are the new traffic sources. Optimize GEO now and get a head start on competitors.",
-      "home.why.safe.title": "Local-First · Data Safe",
-      "home.why.safe.desc": "All analysis runs locally inside your browser. URLs and HTML sources are never uploaded to any server.",
+      "home.end.eyebrow": "Free · Self-Hostable",
+      "home.end.h2": "Check whether AI cites your website now",
+      "home.end.desc": "Paste HTML to run the check entirely in your browser — nothing is uploaded.",
+      "home.end.btn": "Start GEO Check →",
 
-      "home.stat.100": "Scoring Dimensions Comprehensive",
-      "home.stat.6": "Schema Types",
-      "home.stat.0": "Data Upload",
-      "home.stat.inf": "Free to Use",
-
-      "home.cta.eyebrow": "Need Professional Services?",
-      "home.cta.h2.part1": "Let ZSoftYM do a",
-      "home.cta.h2.part2": "deep GEO optimization",
-      "home.cta.h2.part3": "for your brand",
-      "home.cta.desc": "XingTuLink tools are for self-checks and daily optimization. If your business needs a full-stack GEO service targeting Doubao, Kimi, Wenxin Yiyan and ChatGPT, contact our parent company — Xi'an Zhanshang Yueming Software Technology Co., Ltd.",
-
-      /* ===== GEO 检测器页面 ===== */
-      "geo.eyebrow": "Free Online Tool",
+      // GEO 检测器页
+      "geo.eyebrow": "Open-Source Tool",
       "geo.h1": "GEO Friendliness Checker",
       "geo.lead": "Rates your page across 4 dimensions — Structured Data, Meta Tags, Content Semantics and AI Readability — with actionable optimization suggestions.",
       "geo.tab.paste": "Paste HTML Source",
       "geo.tab.url": "Enter URL to Fetch",
       "geo.label.url": "Target Webpage URL",
       "geo.placeholder.url": "https://example.com/article",
-      "geo.tip.url": "URL mode fetches HTML via our self-hosted fetch proxy. If the target has anti-scraping policies it may fail; please use \"Paste HTML Source\" instead.",
+      "geo.tip.url": "URL mode fetches HTML through XingTuLink's server-side fetch endpoint. If the target site has anti-scraping policies it may fail; please use \"Paste HTML Source\" instead.",
       "geo.btn.fetch": "Fetch & Analyze →",
       "geo.label.html": "HTML Source Code",
       "geo.placeholder.html": "Right-click the page → View Page Source → Select all and paste here…\n(Chrome: right-click → View page source → Ctrl+A then copy)",
@@ -113,14 +103,26 @@
       "geo.rtab.issues": "Issues",
       "geo.rtab.sug": "Suggestions",
 
-      "geo.cta.title": "Need Professional GEO Optimization?",
-      "geo.cta.desc": "ZSoftYM offers full-stack GEO optimization solutions targeting Doubao, Kimi, Wenxin Yiyan and ChatGPT.",
+      "geo.cta.title": "Need Foundational GEO Optimization?",
+      "geo.cta.desc": "ZSoftYM skips GEO marketing flooding and focuses on foundational optimization — from structured data and content semantics to technical compliance — so your website itself is understood and willingly cited by AI.",
 
       "geo.watermark": "Tested by xingtulink.com",
       "geo.shareImg": "Download Result Image",
 
-      /* ===== JSON-LD 生成器页面 ===== */
-      "jsonld.eyebrow": "Free Online Tool",
+      // AI 引用实测
+      "cite.eyebrow": "Advanced GEO Lab · AI Citation Test",
+      "cite.title": "AI Citation Test",
+      "cite.lead": "Enter your website URL and industry keywords. The system simulates real users asking DeepSeek 6 questions, and checks whether the AI proactively cites your brand or domain with reference links in its answers.",
+      "cite.label.url": "Target Webpage URL <i>*</i>",
+      "cite.ph.url": "https://example.com/",
+      "cite.label.keyword": "Industry / Domain Keywords <i>*</i>",
+      "cite.ph.keyword": "e.g. Xi'an AI companies",
+      "cite.btn.start": "Start AI Citation Test →",
+      "cite.tip": "Limit: 2 tests per minute per IP. A run takes about 20–40 seconds. AI answers are stochastic — results are for reference only.",
+      "cite.stage.ready": "Preparing…",
+
+      // JSON-LD 生成器页
+      "jsonld.eyebrow": "Open-Source Tool",
       "jsonld.h1": "JSON-LD Structured Data Generator",
       "jsonld.lead": "Pick a Schema type, fill in the fields, and get ready-to-paste JSON-LD in real time. Covers 90% of GEO citation scenarios and conforms to Schema.org standards.",
 
@@ -155,7 +157,7 @@
       "jsonld.cta.title": "Batch Generation · Long-Term GEO Monitoring?",
       "jsonld.cta.desc": "ZSoftYM provides enterprise-grade GEO optimization and structured data services.",
 
-      /* ===== 关于 GEO 页面 ===== */
+      // 关于 GEO 页
       "about.eyebrow": "GEO Knowledge Base",
       "about.h1.part1": "About GEO: Let AI",
       "about.h1.part2": "actively recommend",
@@ -228,11 +230,14 @@
       "about.cta.h2": "Want a Systematic GEO Optimization?",
       "about.cta.desc": "ZSoftYM provides full-stack GEO services, from structured data and content renovation to brand entity building.",
 
-      /* ===== 联系页面 ===== */
+      // 联系页
       "contact.eyebrow": "Contact Us",
       "contact.h1.part1": "Have GEO optimization needs?",
       "contact.h1.part2": "Let's talk",
       "contact.lead": "XingTuLink tools help you self-check for free. For enterprise-grade GEO optimization, contact our parent company ZSoftYM.",
+      "contact.pos.a": "We don't do GEO marketing or content flooding. ",
+      "contact.pos.b": "We focus only on foundational GEO optimization",
+      "contact.pos.c": " — structured data, content semantics and technical compliance, so your website itself is understood and willingly cited by AI.",
 
       "contact.section.h2": "Contact Information",
       "contact.section.lead": "Feel free to reach us via any of the following channels.",
@@ -248,46 +253,73 @@
 
       "contact.privacy.eyebrow": "Compliance",
       "contact.privacy.h2": "Privacy Policy & Disclaimer",
-      "contact.privacy.updated": "Last updated: 2026-08-21",
-      "contact.privacy.h.1": "1. What We Collect",
-      "contact.privacy.p.1": "XingTuLink tools by default <b>do not upload</b> any URL or HTML source you input. All parsing runs locally in your browser.",
-      "contact.privacy.h.2": "2. Third-Party Services",
-      "contact.privacy.p.2": 'The Checker supports two modes: "Paste HTML Source" and "Enter URL to Fetch". All parsing in Paste mode runs locally in your browser; URL Fetch mode fetches the target webpage HTML through a <b>Page Fetch Proxy</b> configured and operated by the deployer, used only for analysis — no storage, no dissemination.',
-      "contact.privacy.h.3": "3. Disclaimer",
-      "contact.privacy.p.3": "This tool only analyzes the technical structure of public webpages. It does not store or disseminate any page content. Detection results are for reference only and do not constitute an SEO/GEO service commitment.",
-      "contact.privacy.h.4": "4. Contact",
-      "contact.privacy.p.4": 'For questions about this Privacy Policy, please email <a href="mailto:guohao@zsymtech.cn" style="color:var(--brand-3);">guohao@zsymtech.cn</a>.',
+      "contact.privacy.updated": "Last updated: 2026-09-13",
+      "contact.privacy.h.1": "1. How Your Data Is Handled (Local vs. Server)",
+      "contact.privacy.p.1": 'In <b>"Paste HTML Source"</b> mode, all parsing runs <b>locally</b> in your browser and never touches any server. The <b>"URL Fetch"</b> and <b>"AI Citation Test"</b> features require a backend: the URL and keywords you submit are sent to the server of the <b>deployer</b> whose site you are visiting, which fetches the target page and calls a large language model on your behalf.',
+      "contact.privacy.p.1b": "On the official site <b>xingtulink.com</b>, the backend is operated by Xi'an Zhanshang Yueming Software Technology Co., Ltd. Submitted content is not persisted — only temporary in-memory timestamps per IP are kept for rate limiting. No sign-up is required, users are not tracked, and your language preference is stored solely in your local browser.",
+      "contact.privacy.h.2": "2. Third-Party AI Services",
+      "contact.privacy.p.2": "AI Citation Test calls a third-party LLM provider using an API key configured by the deployer (the official site uses DeepSeek). The URL and keywords you enter are sent to that provider, whose data handling is governed by its own privacy policy. AI answers are stochastic; citation results are for reference only.",
+      "contact.privacy.h.3": "3. Open Source & Third-Party Deployments",
+      "contact.privacy.p.3": "This software is released free of charge under an open-source license (see LICENSE in the repository). Anyone may download, run and configure their own backend instance. When you use the tool through a non-official deployment (any address other than xingtulink.com), that instance's data processing, log retention and API calls are <b>the sole responsibility of its operator and have no connection with Xi'an Zhanshang Yueming Software Technology Co., Ltd. or XingTuLink</b>. Use such instances at your own discretion and risk.",
+      "contact.privacy.h.4": "4. Disclaimer",
+      "contact.privacy.p.4": "This tool only analyzes the technical structure of public webpages. Check and test results are for reference only and do not constitute any SEO/GEO performance commitment or service guarantee. We assume no responsibility for the availability or accuracy of third-party deployments or third-party AI services.",
+      "contact.privacy.h.5": "5. Contact",
+      "contact.privacy.p.5": 'If you have questions about this policy, or about data handling on the official site, please email <a href="mailto:guohao@zsymtech.cn" style="color:var(--brand-3);">guohao@zsymtech.cn</a>.',
 
-      /* ===== 404 页面 ===== */
+      // 404 页
       "404.h1": "Page Not Found",
       "404.lead.part1": "Sorry, the page you requested doesn't exist or has been moved.<br />",
       "404.lead.part2": "You can return home or go directly to our tools.",
 
-      /* ===== 语言切换器自身 ===== */
+      // 语言切换器自身
       "lang.label": "Language",
       "lang.zh": "中文",
       "lang.en": "EN",
     },
   };
 
-  // -------------- 核心逻辑 --------------
+  // 核心逻辑
   const STORAGE_KEY = "xtl_lang";
   const SUPPORTED = ["zh-CN", "en"];
 
   function detectLang() {
-    // 1) localStorage
+    // 先看用户之前选过没
     try {
       const s = localStorage.getItem(STORAGE_KEY);
       if (s && SUPPORTED.includes(s)) return s;
     } catch (e) {}
-    // 2) browser
+    // 再看浏览器语言
     const nav = (navigator.language || "zh-CN").toLowerCase();
     if (nav.startsWith("en")) return "en";
     return "zh-CN";
   }
 
+  // 第一次覆盖之前先存好中文原文，不然切英文再切回来就没东西可还原了
+  let originalsCaptured = false;
+  const originalHtml = new WeakMap();
+  const originalAttrs = new WeakMap();
+
+  function captureOriginals() {
+    if (originalsCaptured) return;
+    originalsCaptured = true;
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      if (!originalHtml.has(el)) originalHtml.set(el, el.innerHTML);
+    });
+    document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
+      if (originalAttrs.has(el)) return;
+      const raw = el.getAttribute("data-i18n-attr") || "";
+      const saved = {};
+      raw.split("|").forEach((pair) => {
+        const [attr] = pair.split(":").map((s) => s.trim());
+        if (attr) saved[attr] = el.getAttribute(attr);
+      });
+      originalAttrs.set(el, saved);
+    });
+  }
+
   function setLang(lang, persist) {
     if (!SUPPORTED.includes(lang)) lang = "zh-CN";
+    captureOriginals();
     if (persist !== false) {
       try {
         localStorage.setItem(STORAGE_KEY, lang);
@@ -298,20 +330,19 @@
 
     const dict = DICT[lang] || {};
 
-    // 1) 替换 [data-i18n] innerHTML
+    // 替换 data-i18n 元素的 innerHTML
     document.querySelectorAll("[data-i18n]").forEach((el) => {
       const key = el.getAttribute("data-i18n");
-      if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+      if (!key) return;
+      if (Object.prototype.hasOwnProperty.call(dict, key)) {
         el.innerHTML = dict[key];
-      } else if (key && !Object.prototype.hasOwnProperty.call(dict, key)) {
-        // 英文无条目 = 回退（一般空 = 中文原样）
-        if (lang === "en" && window.console && window.console.warn) {
-          // 静默跳过；开调试时可打开：console.warn("[i18n] missing key:", key);
-        }
+      } else if (lang === "zh-CN" && originalHtml.has(el)) {
+        // 中文词典没这条，还原原文
+        el.innerHTML = originalHtml.get(el);
       }
     });
 
-    // 2) 替换属性 data-i18n-attr  格式: placeholder:key|title:key2
+    // 替换属性，格式 placeholder:key|title:key2
     document.querySelectorAll("[data-i18n-attr]").forEach((el) => {
       const raw = el.getAttribute("data-i18n-attr") || "";
       raw.split("|").forEach((pair) => {
@@ -319,14 +350,21 @@
         if (!attr || !key) return;
         if (Object.prototype.hasOwnProperty.call(dict, key)) {
           el.setAttribute(attr, dict[key]);
+        } else if (lang === "zh-CN" && originalAttrs.has(el)) {
+          // 词典没这条就还原原始属性
+          const saved = originalAttrs.get(el);
+          if (Object.prototype.hasOwnProperty.call(saved, attr)) {
+            if (saved[attr] === null) el.removeAttribute(attr);
+            else el.setAttribute(attr, saved[attr]);
+          }
         }
       });
     });
 
-    // 3) meta / og 标签
+    // title / description / og:* 等 meta
     translateMeta(dict);
 
-    // 4) 触发自定义事件，便于页面脚本（geo-checker.js等）监听
+    // 通知页面脚本重绘动态内容
     try {
       const ev = new CustomEvent("xtl:langchange", { detail: { lang } });
       window.dispatchEvent(ev);
@@ -334,10 +372,9 @@
   }
 
   function translateMeta(dict) {
-    // 特殊：按当前页面做 title / description / og:title / og:description
-    // 这里采用「每个页面自己的 meta 字典」策略
+    // 每个页面的 meta 文案单独配一份
     let path = location.pathname.replace(/\/+$/, "") + "/";
-    // 首页三种路径都归为 /
+    // 几种首页路径统一成 /
     if (path === "/index.html/" || path === "//") path = "/";
     const normPath = path.replace(/\/+/g, "/");
 
@@ -345,20 +382,20 @@
       "/": {
         "zh-CN": {
           title: "GEO优化工具_AI搜索引擎优化_JSON-LD生成器 - 星图邻",
-          description: "星图邻（XingTuLink）提供 GEO 友好度检测、JSON-LD 生成器等面向 AI 搜索引擎优化的免费在线工具，助力网站在豆包、Kimi、文心一言、ChatGPT 中被主动引用。由西安栈上月明软件科技有限公司运营。",
-          ogTitle: "星图邻 - 在线工具与开源项目平台",
-          ogDesc: "提供 GEO 优化工具、JSON-LD 生成器等在线工具，发布优质开源项目。",
-          twTitle: "星图邻 - 在线工具与开源项目平台",
-          twDesc: "提供 GEO 优化工具、JSON-LD 生成器等在线工具",
+          description: "开源 GEO（生成式引擎优化）工具集：GEO 友好度检测、AI 引用实测、JSON-LD 结构化数据生成，助力网站在豆包、Kimi、ChatGPT 等 AI 回答中被主动引用。免费使用，支持自托管。",
+          ogTitle: "星图邻 - 开源 GEO 工具集",
+          ogDesc: "GEO 检测、AI 引用实测、JSON-LD 生成，三个开源工具助力网站被 AI 主动引用。",
+          twTitle: "星图邻 - 开源 GEO 工具集",
+          twDesc: "GEO 检测、AI 引用实测、JSON-LD 生成，三个开源工具助力网站被 AI 主动引用。",
           ogLocale: "zh_CN",
         },
         en: {
           title: "GEO Optimization Tool · AI SEO · JSON-LD Generator - XingTuLink",
-          description: "XingTuLink provides free online tools for AI search engine optimization — GEO friendliness checker & JSON-LD generator — helping your site get cited by Doubao, Kimi, Wenxin Yiyan and ChatGPT. Operated by Xi'an Zhanshang Yueming Software Technology Co., Ltd.",
-          ogTitle: "XingTuLink - Online Tools & Open-Source Platform",
-          ogDesc: "Free GEO optimization tools, JSON-LD generator and high-quality open-source projects.",
-          twTitle: "XingTuLink - Online Tools & Open-Source Platform",
-          twDesc: "GEO optimization tools and JSON-LD generator",
+          description: "Open-source GEO (Generative Engine Optimization) toolkit: GEO friendliness check, AI citation test and JSON-LD structured-data generator — helping your site get cited in answers from Doubao, Kimi and ChatGPT. Free to use, self-hostable.",
+          ogTitle: "XingTuLink - Open-Source GEO Toolkit",
+          ogDesc: "GEO check, AI citation test and JSON-LD generator — three open-source tools to help your site get cited by AI.",
+          twTitle: "XingTuLink - Open-Source GEO Toolkit",
+          twDesc: "GEO check, AI citation test and JSON-LD generator — three open-source tools for AI citations.",
           ogLocale: "en_US",
         },
       },
@@ -383,18 +420,6 @@
         en: {
           title: "JSON-LD Generator | XingTuLink",
           description: "Online JSON-LD Schema generator supporting 6 types — Organization, Article, FAQ, HowTo, Product, LocalBusiness. Fill a form to get copy-paste ready structured data conforming to Schema.org standards.",
-          ogLocale: "en_US",
-        },
-      },
-      "/about-geo/": {
-        "zh-CN": {
-          title: "关于 GEO | 星图邻",
-          description: "什么是 GEO（生成式引擎优化）？与 SEO 有什么区别？如何为豆包、Kimi、文心一言、ChatGPT 等生成式 AI 做优化？一文讲透。",
-          ogLocale: "zh_CN",
-        },
-        en: {
-          title: "About GEO | XingTuLink",
-          description: "What is Generative Engine Optimization (GEO)? How does it differ from SEO? How to optimize for Generative AI like Doubao, Kimi, Wenxin Yiyan and ChatGPT? Everything in one article.",
           ogLocale: "en_US",
         },
       },
@@ -459,7 +484,7 @@
     }
   }
 
-  // -------------- 切换按钮：注入到 .nav 内末尾 --------------
+  // 语言切换按钮，插到 .nav 末尾
   function injectToggle() {
     if (document.querySelector(".lang-toggle")) return;
     const nav = document.querySelector(".site-header .nav");
@@ -481,9 +506,9 @@
       '<span class="lt-label">EN</span>' +
       "</button>";
 
-    // 直接放在 .nav-cta 旁边；如果找不到就在 nav 末尾
+    // 放在 .nav-cta 旁边；找不到 cta 就直接追加到 nav 末尾
     const cta = nav.querySelector(".nav-cta");
-    // ---- GitHub 图标：放在语言切换之前/之后都行，这里统一放到切换之后、nav-cta 之前 ----
+    // GitHub 图标固定夹在语言切换和 cta 之间
     const GITHUB_URL = "https://github.com/ZSoftYM/geo-friendly-checker";
     const GITHUB_TITLE_ZH = "开源仓库 · GitHub";
     const GITHUB_TITLE_EN = "Open Source · GitHub";
@@ -512,7 +537,7 @@
         const lang = btn.getAttribute("data-lang");
         setLang(lang);
         updateToggleUI();
-        // 语言切换后同步更新 GitHub 图标 tooltip
+        // GitHub 图标的 tooltip 也跟着换
         const ghEl = document.querySelector(".nav-github");
         if (ghEl) {
           const t =
@@ -536,15 +561,9 @@
         btn.classList.remove("active");
       }
     });
-    // 更新切换标签文字（让按钮标签按当前语言显示）
-    const zhLabel = document.querySelector(".lang-toggle .lt-zh .lt-label");
-    const enLabel = document.querySelector(".lang-toggle .lt-en .lt-label");
-    if (current === "en") {
-      // 把“中文”改成中文标识不变，但可加辅助
-    }
   }
 
-  // -------------- 对外 API --------------
+  // 对外 API
   window.XTLi18n = {
     get t() {
       const lang = document.documentElement.getAttribute("data-lang") || "zh-CN";
@@ -567,7 +586,7 @@
     SUPPORTED: SUPPORTED,
   };
 
-  // -------------- 自动初始化 --------------
+  // 自动初始化
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => window.XTLi18n.init());
   } else {

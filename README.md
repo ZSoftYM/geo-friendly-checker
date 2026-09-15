@@ -1,142 +1,139 @@
-# 星图邻 XingTuLink · GEO 工具站
+# GeoFriendlyChecker
 
-> **English Version** → [README.en.md](./README.en.md)
->
-> 西安栈上月明软件科技有限公司 出品 · 在线体验：[xingtulink.com](https://xingtulink.com)
-> 公司官网：[zsoftym.com](https://zsoftym.com/)
+星图邻开源项目系列之一。
 
-本项目是**西安栈上月明软件科技有限公司**开发并开源的**纯静态 GEO 工具站**，无需任何构建步骤即可部署。包含两个核心工具：
+GeoFriendlyChecker 是一款轻量级、可自托管的 GEO（生成式引擎优化）诊断工具。输入网址，从结构化数据、Meta 标签、内容语义、AI 可读性四个维度打分，并给出可落地的优化建议。另含 AI 引用实测——自动模拟真实用户向 AI 提问，检测品牌或域名是否在 AI 回答中被提及；以及一个开箱即用的 JSON-LD 生成器。
 
-- **GEO 友好度检测器** `/tools/geo-checker/` — 4 个维度 100 分制评估，助力生成式引擎优化
-- **JSON-LD 生成器** `/tools/json-ld-generator/` — 6 种 Schema 类型一键生成结构化数据
+粘贴 HTML 的检测全程在浏览器本地完成，零数据上传；URL 抓取和引用实测由自带的 Node 服务处理。
 
-## ✨ 在线体验
+## 功能
 
-官方部署地址：**[https://xingtulink.com](https://xingtulink.com)**
+### GEO 友好度检测
 
-## 🖼 界面预览
+- 输入 URL（后端抓取）或粘贴 HTML 源码（浏览器本地解析，不上传）
+- 四维评分（满分 100）：结构化数据 · Meta 标签 · 内容语义 · AI 可读性
+- 逐项问题定位 + 优化建议，支持导出 Canvas 分享图
 
-### 首页（Landing Page）
+### AI 引用实测
 
-[![首页截图](./img/homepage-screenshot.png)](./img/homepage-screenshot.png)
-
-### GEO 友好度检测器
-
-[![GEO 检测器截图](./img/geo-checker-screenshot.png)](./img/geo-checker-screenshot.png)
+- 输入目标网址 + 行业关键词
+- 服务端自动生成 6 个不带品牌名的中立测试问题，调用 DeepSeek 逐条提问
+- 命中判定在本地用正则完成（品牌名 / 域名匹配），不依赖模型自评
+- SSE 流式展示检测进度，约 20–40 秒；单题失败自动跳过，另对未引用问题做一次原因分析
 
 ### JSON-LD 生成器
 
-[![JSON-LD 生成器截图](./img/json-ld-generator-screenshot.png)](./img/json-ld-generator-screenshot.png)
+- 支持 Organization / Article / FAQ / HowTo / Product / LocalBusiness
+- 表单填写，实时生成符合 Schema.org 规范的代码，一键复制或下载
 
-## 📁 目录结构
+全站中 / 英双语。
+
+## 界面预览
+
+<!-- 截图占位：将截图放入 img/ 并替换为实际文件，也可直接改下面的路径 -->
+
+首页
+
+![首页截图](./img/homepage-screenshot.png)
+
+GEO 友好度检测器（含 AI 引用实测）
+
+![GEO 检测器截图](./img/geo-checker-screenshot.png)
+
+JSON-LD 生成器
+
+![JSON-LD 生成器截图](./img/json-ld-generator-screenshot.png)
+
+AI引用实测
+
+![ai-citation-benchmarking](./img/ai-citation-benchmarking.png)
+
+## 代码结构
 
 ```
-/
-├── index.html                       首页
-├── 404.html
-├── robots.txt
-├── sitemap.xml
-├── about-geo/index.html             关于 GEO（含 FAQ）
-├── contact/index.html               联系我们 + 隐私政策
+.
+├── index.html                         首页
+├── 404.html / robots.txt / sitemap.xml
+├── contact/index.html                 联系方式与隐私政策
 ├── tools/
-│   ├── geo-checker/index.html       GEO 检测器
-│   └── json-ld-generator/index.html JSON-LD 生成器
-├── public/
-│   ├── styles.css                   全站样式
-│   ├── site.js                      通用脚本
-│   ├── geo-checker.js               检测器逻辑
-│   └── json-ld-generator.js         生成器逻辑
-└── img/
-    ├── logo.png                     品牌 Logo
-    ├── homepage-screenshot.png      首页截图
-    ├── geo-checker-screenshot.png   GEO 检测器截图
-    └── json-ld-generator-screenshot.png JSON-LD 生成器截图
+│   ├── geo-checker/index.html         GEO 检测器页（内含 AI 引用实测）
+│   └── json-ld-generator/index.html   JSON-LD 生成器页
+├── public/                            前端：纯原生 JS，零依赖、零构建
+│   ├── styles.css                     全站样式
+│   ├── i18n.js                        中英文切换
+│   ├── site.js                        导航、移动端菜单、全站 JSON-LD 注入
+│   ├── geo-checker.js                 四维检测、评分、报告渲染与分享图
+│   ├── citation-test.js               引用实测前端（SSE 接收与渲染）
+│   └── json-ld-generator.js           生成器表单与代码拼装
+├── img/                               Logo 与界面截图
+└── server/                            后端：只用 Node 内置模块，Node >= 18
+    ├── server.js                      HTTP 入口：静态托管 + API 路由 + SSE
+    ├── package.json                   npm start 入口，无第三方依赖
+    ├── .env.example                   环境变量示例
+    └── src/
+        ├── env.js                     .env 读取与配置汇总
+        ├── store.js                   按 IP 的内存滑窗限频
+        ├── static.js                  静态文件服务（含目录穿越防护）
+        ├── fetchPage.js               页面抓取（UA、跳转、超时/体积限制、SSRF 拦截）
+        ├── extract.js                 从页面 HTML 启发式提取品牌名候选
+        ├── deepseek.js                DeepSeek Chat Completions 客户端
+        └── citation.js                引用实测主流程：出题、提问、命中判定、原因分析
 ```
 
-## 🚀 本地预览
+后端一个进程同时托管静态页面和三个接口：`GET /api/health`（健康检查）、`GET /api/fetch`（页面抓取）、`POST /api/geo/citation-test`（引用实测，SSE 返回进度）。
 
-直接用任意静态服务器即可，例如：
+## 快速开始
+
+### 前端本地检测（零配置）
+
+粘贴 HTML 的检测不需要后端，但页面使用绝对路径引用资源，需用任意静态服务器打开（直接双击 `index.html` 会丢样式）：
 
 ```bash
-# Python
 python -m http.server 8080
-
-# Node
+# 或
 npx serve .
 ```
 
-然后访问 `http://localhost:8080/`。
+访问 `http://localhost:8080/tools/geo-checker/`，切到「粘贴 HTML 源码」即可。
 
-## 📦 部署
+### 完整服务（含 URL 抓取与 AI 引用实测）
 
-整个目录直接上传到任意静态托管（Vercel、阿里云 OSS、腾讯云 COS、Cloudflare Pages、GitHub Pages）即可。
-
-### 阿里云 OSS 部署示例
+无需安装依赖，Node.js 18+：
 
 ```bash
-ossutil cp -r . oss://your-bucket-name/ --update
+cd server
+cp .env.example .env        # Windows 用 copy
+# 编辑 .env，填入 DEEPSEEK_API_KEY
+node server.js              # 或 npm start，默认端口 8080
 ```
 
-> 部署前请把 `robots.txt` / `sitemap.xml` / 各页 `canonical` / `og:url` 中域名替换为你的实际域名。
+不配置 `DEEPSEEK_API_KEY` 时服务照常运行，仅 AI 引用实测不可用。
 
-## ⚙️ 页面抓取代理服务配置
+## 环境变量
 
-GEO 检测器支持两种模式：
+| 变量 | 必填 | 默认值 | 说明 |
+| --- | --- | --- | --- |
+| `PORT` | 否 | `8080` | 服务监听端口 |
+| `DEEPSEEK_API_KEY` | 使用引用实测时必填 | 无 | DeepSeek API Key，仅服务端读取，不下发浏览器 |
+| `DEEPSEEK_MODEL` | 否 | `deepseek-chat` | 调用的模型 |
+| `DEEPSEEK_BASE_URL` | 否 | `https://api.deepseek.com` | API 地址，可指向自建中转 |
+| `CITATION_RATE_MAX` | 否 | `2` | 同一 IP 每个时间窗内引用实测的最大次数，设为 `false`（或 `0` / `off`）关闭限制 |
+| `FETCH_RATE_MAX` | 否 | `20` | 同一 IP 每个时间窗内页面抓取的最大次数，设为 `false`（或 `0` / `off`）关闭限制 |
+| `RATE_WINDOW_MS` | 否 | `60000` | 限频时间窗，单位毫秒（默认 1 分钟） |
 
-1. **粘贴 HTML 源码**（推荐）— 本地解析，零依赖，不上传任何数据
-2. **输入 URL 抓取** — 需要自建 CORS 代理来中转目标网页 HTML
+## 技术栈
 
-如需使用 URL 抓取模式，请编辑 `public/geo-checker.js`，配置 `PROXY_BASE` 为你自己的**页面抓取代理服务地址**：
+- 前端：纯 HTML / CSS / Vanilla JS，零构建、零第三方依赖
+- 后端：Node.js 原生 HTTP（`node:http` / `node:fs` 等），零第三方 npm 依赖
+- AI：DeepSeek API（OpenAI 兼容协议，可选）
+- 国际化：中 / 英双语
 
-```js
-// public/geo-checker.js
-const PROXY_BASE = 'https://your-proxy-domain.com/proxy-path';
-```
+## License
 
-代理服务需支持：接收 `?url=<目标URL>` 参数、添加允许跨域的响应头、返回目标页面的原始 HTML。
-
-## 🛠 第三方依赖说明
-
-- 字体：使用系统字体栈，无外部字体请求
-- 图标：使用 Emoji 字符，无图标字体
-- 检测器「粘贴 HTML 源码」模式纯浏览器本地解析，无任何第三方网络请求
-
-## ✅ 合规要点
-
-- 所有 HTML/JS 解析在浏览器本地完成，**不上传用户数据**
-- 检测器页面已包含免责声明
-- `contact/#privacy` 包含完整隐私政策
-
-## 🏢 关于我们
-
-**星图邻（XingTuLink）** 是西安栈上月明软件科技有限公司旗下的在线工具与开源项目平台。
-
-- **公司名称**：西安栈上月明软件科技有限公司
-- **公司官网**：[https://zsoftym.com/](https://zsoftym.com/)
-- **在线工具**：[https://xingtulink.com](https://xingtulink.com)
-- **联系邮箱**：guohao@zsymtech.cn
-- **联系电话**：+86 176 2902 0227
-- **地　　址**：陕西 · 西安
+MIT
 
 ---
 
-## ⚠️ 免责声明
+**About**
 
-1. **工具性质**：本项目及所提供的 GEO 友好度检测器、JSON-LD 生成器等工具（以下统称"本工具"）为**免费开源的技术参考工具**，仅用于分析网页的技术结构与生成结构化数据示例，**不构成任何 GEO / SEO 服务承诺或专业建议**。
-
-2. **结果参考性**：GEO 检测评分与优化建议基于通用的 AI 搜索引擎友好度规则给出，**不保证任何 AI 引擎（如豆包、Kimi、ChatGPT 等）一定会引用或推荐使用本工具优化后的网站**。各 AI 平台的算法随时可能调整，实际效果以各平台为准。
-
-3. **数据安全**：
-   - 「粘贴 HTML 源码」模式的所有解析在用户浏览器本地完成，**不会上传任何用户输入的数据**；
-   - 「输入 URL 抓取」模式经由部署方自行配置的**页面抓取代理服务**中转抓取目标网页的公开 HTML，西安栈上月明软件科技有限公司（以下简称"本公司"）不存储、不传播任何抓取内容；
-   - 使用者不得通过本工具抓取非公开或涉及他人隐私的内容，**由此产生的法律责任由使用者自行承担**。
-
-4. **使用风险**：使用者因下载、部署、修改或使用本项目源代码所产生的任何**直接或间接损失**，包括但不限于网站排名下降、流量损失、业务中断、法律纠纷等，本公司均不承担任何责任。
-
-5. **第三方内容**：本工具文档或代码中引用的第三方服务（如静态托管、CORS 代理、Schema.org 规范等）仅为技术示例，本公司不对其可用性、准确性、安全性做任何担保。
-
-6. **修改权利**：本公司有权在不提前通知的情况下**更新或终止**本项目的维护、在线服务及相关文档。开源代码按所采用的开源许可证（如适用）条款分发。
-
-7. **合规义务**：部署和使用本项目者应自行遵守所在国家或地区的法律法规，包括但不限于《网络安全法》《数据安全法》《个人信息保护法》及《人工智能生成合成内容标识办法》等。
-
-**使用本项目即视为您已阅读、理解并同意本免责声明的全部条款。**
+星图邻（[xingtulink.com](https://xingtulink.com)）是栈上月明（[zsoftym.com](https://zsoftym.com)）旗下的开源技术品牌。我们在 AI 方向持续产出开源工具，帮助企业解决实际问题，GeoFriendlyChecker 是其中第一个。
